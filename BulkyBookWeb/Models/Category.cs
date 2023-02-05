@@ -1,9 +1,10 @@
-﻿using System.ComponentModel;
+﻿using BulkyBookWeb.Data.Repository.IRepository;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
 namespace BulkyBookWeb.Models
 {
-    public class Category
+    public class Category: IBaseRepository
     {
         [Key]
         public int Id { get; set; }

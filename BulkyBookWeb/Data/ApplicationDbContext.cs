@@ -8,5 +8,7 @@ namespace BulkyBookWeb.Data
         public ApplicationDbContext(DbContextOptions options): base(options) { 
         }
         public DbSet<Category> categories { get; set; }
+        public DbSet<CoverType> coverTypes { get; set; }
+        public DbSet<Product> products { get; set; }
     }
 }
