@@ -1,4 +1,5 @@
 ﻿using BulkyBookWeb.Data;
+using BulkyBookWeb.Data.Repository;
 using BulkyBookWeb.Data.Repository.IRepository;
 using BulkyBookWeb.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -12,6 +13,9 @@ namespace BulkyBookWeb.Controllers
     {
         private readonly IUnitOfWork _db;
         private readonly IWebHostEnvironment webHostEnvironment;
+
+        public Product Product { get; private set; }
+
         public ProductController(IUnitOfWork _db, IWebHostEnvironment webHostEnvironment)
         {
             this._db = _db;
@@ -20,34 +24,39 @@ namespace BulkyBookWeb.Controllers
 
         public async Task<IActionResult> Index()
         {
-            //IEnumerable<Product> data = await _db.Product.GetAllAsync();
-            return View();
-        }
-        public IActionResult Create(int? id)
-        {
-            Product product = new();
-            IEnumerable<SelectListItem> CategoryList = _db.Category.GetAll().Select(
-                u=> new SelectListItem
-                {
-                    Text=u.Name,
-                    Value=u.Id.ToString(),
-                }
-                );
-            
-            IEnumerable<SelectListItem> CoverTypeList = _db.CoverType.GetAll().Select(
-                u => new SelectListItem
-                {
-                    Text = u.Name,
-                    Value = u.Id.ToString(),
-                }
-                );
-            if(id==null || id == 0)
-            {
-                ViewBag.CategoryList = CategoryList;
-                ViewBag.CoverTypeList = CoverTypeList;
-            }
 
-            return View(product);
+            IEnumerable<Product> data = _db.Product.GetAll(includeProperties: "Category,CoverType");
+            return View(data);
+        }
+        public async Task<IActionResult> Create(int? id)
+        {
+            //Product product = new();
+            //IEnumerable<SelectListItem> CategoryList = _db.Category.GetAll().Select(
+            //    u=> new SelectListItem
+            //    {
+            //        Text=u.Name,
+            //        Value=u.Id.ToString(),
+            //    }
+            //    );
+
+            //IEnumerable<SelectListItem> CoverTypeList = _db.CoverType.GetAll().Select(
+            //    u => new SelectListItem
+            //    {
+            //        Text = u.Name,
+            //        Value = u.Id.ToString(),
+            //    }
+            //    );
+            //if(id==null || id == 0)
+            //{
+            //    ViewBag.CategoryList = CategoryList;
+            //    ViewBag.CoverTypeList = CoverTypeList;
+            //    return View(product);
+            //}
+
+            //Product = _db.Product.GetFirstOrDefault(u => u.Id == id);
+            ViewData["CategoryId"] = new SelectList(await _db.Category.GetAllAsync(), "Id", "Name");
+            ViewData["CoverTypeId"] = new SelectList(await _db.CoverType.GetAllAsync(), "Id", "Name");
+            return View();
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -75,31 +84,52 @@ namespace BulkyBookWeb.Controllers
 
             return View(product);
         }
-        public async Task<IActionResult> Edit()
+        public async Task<IActionResult> Edit(int id)
         {
-            ViewData["CoverTypeId"] = new SelectList(await _db.Product.GetAllAsync(), "CoverTypeId", "Name");
-            return View();
+
+            var data = await _db.Category.GetByIdAsync(id);
+            if(data == null)
+            {
+                return View(NotFound());
+            }
+            ViewData["CategoryId"] = new SelectList(await _db.Category.GetAllAsync(), "Id", "Name", Product.CategoryId);
+            ViewData["CoverTypeId"] = new SelectList(await _db.CoverType.GetAllAsync(), "Id", "Name", Product.CoverTypeId);
+            return View(data);
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Product product)
+        
+        public async Task<IActionResult> Edit(int id, Product product, IFormFile? file)
         {
             if (ModelState.IsValid)
             {
-                await _db.Product.AddAsync(product);
+                string path = webHostEnvironment.WebRootPath;
+                if (path != null)
+                {
+                    string fileName = Guid.NewGuid().ToString();
+                    var upload = Path.Combine(path, @"img/");
+                    var extension = Path.GetExtension(file.FileName);
+                    using (var fileStreams = new FileStream(Path.Combine(upload, fileName + extension), FileMode.Create))
+                    {
+                        file.CopyTo(fileStreams);
+                    }
+                    product.Image = @"\img\" + fileName + extension;
+
+                }
+                await _db.Product.UpdateAsync(id, product);
                 return RedirectToAction("Index");
 
             }
 
             return View(product);
         }
-        #region API CALL
-        [HttpGet]
-        public IActionResult GetAll()
-        {
-            var productList = _db.Product.GetAll();
-            return Json(new { data = productList });
-        }
-        #endregion
+        //#region API CALL
+        //[HttpGet]
+        //public IActionResult GetAll()
+        //{
+        //    var productList = _db.Product.GetAll(includeProperties:"Category,CoverType");
+        //    return Json(new { data = productList });
+        //}
+        //#endregion
     }
 }

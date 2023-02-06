@@ -6,7 +6,8 @@ namespace BulkyBookWeb.Data.Repository.IRepository
     {
         Task<IEnumerable<T>> GetAllAsync();
 
-        IEnumerable<T> GetAll();
+        T GetFirstOrDefault(Expression<Func<T, bool>> filter, string? includeProperties = null);
+        IEnumerable<T> GetAll(string? includeProperties = null );
         Task AddAsync(T entity);
 
 

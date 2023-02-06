@@ -11,6 +11,7 @@ namespace BulkyBookWeb.Data.Repository
         public Repository(ApplicationDbContext _db)
         {
             this._db = _db;
+            this._db.products.Include(u => u.Category).Include(u => u.CoverType);
         }
 
         public async Task AddAsync(T entity)
@@ -27,11 +28,22 @@ namespace BulkyBookWeb.Data.Repository
             await _db.SaveChangesAsync();
         }
 
-        public IEnumerable<T> GetAll()
+        public IEnumerable<T> GetAll(string? includeProperties = null)
         {
             IQueryable<T> query = _db.Set<T>();
+            if(includeProperties!= null)
+            {
+                foreach(var inc in includeProperties.Split(new char[] {','}, StringSplitOptions.RemoveEmptyEntries))
+                {
+                    query = query.Include(inc);
+                }
+            }
+
             return query.ToList();
         }
+
+       
+        
 
         public async Task<IEnumerable<T>> GetAllAsync()
         {
@@ -44,7 +56,23 @@ namespace BulkyBookWeb.Data.Repository
         public async Task<T> GetByIdAsync(int id)
         {
             var data = await _db.Set<T>().FirstOrDefaultAsync(n => n.Id == id);
+
             return data;
+        }
+
+        public T GetFirstOrDefault(Expression<Func<T, bool>> filter, string? includeProperties = null)
+        {
+            IQueryable<T> query = _db.Set<T>();
+            query = query.Where(filter);
+
+            if (includeProperties != null)
+            {
+                foreach (var inc in includeProperties.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                {
+                    query = query.Include(inc);
+                }
+            }
+            return query.FirstOrDefault();
         }
 
         public async Task UpdateAsync(int id, T entity)

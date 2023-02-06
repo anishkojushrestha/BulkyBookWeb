@@ -5,7 +5,7 @@
 
 <h1>Product Table</h1>
 
-<table id="myTable" class="table">
+<table  class="table">
   <thead>
     <tr>
 
@@ -25,7 +25,7 @@
   </thead>
   <tbody>
       <a asp-action="Create" asp-controller="Product">Create New Category</a>
-       @* @foreach (var obj in Model)
+        @foreach (var obj in Model)
         {
                         <tr>
                   <th>@obj.Image</th>
@@ -36,19 +36,19 @@
                   <th>@obj.Price</th>
                   <th>@obj.Price50</th>
                   <th>@obj.Price50</th>
-                  <th>@obj.Category</th>
-                  <th>@obj.CoverType</th>
+                  <th>@obj.Category.Name</th>
+                  <th>@obj.CoverType.Name</th>
                   <td>
                           <a asp-action="Edit" asp-controller="Product" asp-route-id = "@obj.Id" class="btn btn-warning">Edit</a>
                           <a asp-action="Delete" asp-controller="Product" asp-route-id = "@obj.Id" class="btn btn-danger">Delete</a>
                   </td>
                 </tr>
-        }*@
+        }
 
 
   </tbody>
 </table>
-
+@*
 @section Scripts{
     <script src="~/js/product.js"></script>
-}
+*@}

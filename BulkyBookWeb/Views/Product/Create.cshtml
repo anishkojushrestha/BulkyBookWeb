@@ -6,6 +6,7 @@
 <h1>Create</h1>
 
 <form method="post" enctype="multipart/form-data">
+    
   <div class="mb-3">
     <label asp-for="Title" class="form-label"></label>
     <input  class="form-control" asp-for="Title">
@@ -43,7 +44,7 @@
   </div>
   <div class="mb-3">
     <label asp-for="Category" class="form-label"></label>
-    <select asp-for="CategoryId" asp-items="ViewBag.CategoryList" class="form-select">
+    <select asp-for="CategoryId" asp-items="ViewBag.CategoryId" class="form-select">
         <option disabled selected>--select Category--</option>
     </select>
     
@@ -51,11 +52,11 @@
   </div>
   <div class="mb-3">
     <label asp-for="CoverType" class="form-label"></label>
-    <select asp-for="CoverTypeId" asp-items="ViewBag.CoverTypeList" class="form-select">
+    <select asp-for="CoverTypeId" asp-items="ViewBag.CoverTypeId" class="form-select">
         <option disabled selected>--select Category--</option>
     </select>
 
-    <span asp-validation-for="Category" class="text-danger"></span>
+    <span asp-validation-for="CoverType" class="text-danger"></span>
   </div>
    <div class="mb-3">
     <label asp-for="Image" class="form-label"></label>
@@ -63,4 +64,5 @@
     <span asp-validation-for="Image" class="text-danger"></span>
   </div>
   <button type="submit" class="btn btn-primary">Submit</button>
+
 </form>

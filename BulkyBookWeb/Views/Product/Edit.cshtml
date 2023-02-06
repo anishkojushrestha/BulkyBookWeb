@@ -1,0 +1,68 @@
+﻿@model BulkyBookWeb.Models.Product
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<form method="post" asp-action="Edit" enctype="multipart/form-data">
+    
+  <div class="mb-3">
+    <label asp-for="Title" class="form-label"></label>
+    <input  class="form-control" asp-for="Title">
+    <span asp-validation-for="Title" class="text-danger"></span>
+  </div>
+  <div class="mb-3">
+    <label asp-for="Description" class="form-label"></label>
+    <input  class="form-control" asp-for="Description">
+    <span asp-validation-for="Description" class="text-danger"></span>
+  </div>
+  <div class="mb-3">
+    <label asp-for="ISBN" class="form-label"></label>
+    <input  class="form-control" asp-for="ISBN">
+    <span asp-validation-for="ISBN" class="text-danger"></span>
+  </div>
+  <div class="mb-3">
+    <label asp-for="ListPrice" class="form-label"></label>
+    <input  class="form-control" asp-for="ListPrice">
+    <span asp-validation-for="ListPrice" class="text-danger"></span>
+  </div>
+  <div class="mb-3">
+    <label asp-for="Price" class="form-label"></label>
+    <input  class="form-control" asp-for="Price">
+    <span asp-validation-for="Price" class="text-danger"></span>
+  </div>
+  <div class="mb-3">
+    <label asp-for="Price50" class="form-label"></label>
+    <input  class="form-control" asp-for="Price50">
+    <span asp-validation-for="Price50" class="text-danger"></span>
+  </div>
+  <div class="mb-3">
+    <label asp-for="Price100" class="form-label"></label>
+    <input  class="form-control" asp-for="Price100">
+    <span asp-validation-for="Price100" class="text-danger"></span>
+  </div>
+<div class="mb-3">
+    <label asp-for="Category" class="form-label"></label>
+    <select asp-for="CategoryId" asp-items="ViewBag.CategoryId" class="form-select">
+        <option disabled selected>--select Category--</option>
+    </select>
+
+    <span asp-validation-for="Category" class="text-danger"></span>
+  </div>
+  <div class="mb-3">
+    <label asp-for="CoverType" class="form-label"></label>
+    <select asp-for="CoverTypeId" asp-items="ViewBag.CoverTypeId" class="form-select">
+        <option disabled selected>--select Category--</option>
+    </select>
+
+    <span asp-validation-for="CoverType" class="text-danger"></span>
+  </div>>
+   <div class="mb-3">
+    <label asp-for="Image" class="form-label"></label>
+    <input  class="form-control" name="file" type="file">
+    <span asp-validation-for="Image" class="text-danger"></span>
+  </div>
+  <button type="submit" class="btn btn-primary">Submit</button>
+ 
+</form>
