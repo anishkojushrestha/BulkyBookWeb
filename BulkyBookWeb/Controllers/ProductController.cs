@@ -24,7 +24,7 @@ namespace BulkyBookWeb.Controllers
 
         public async Task<IActionResult> Index()
         {
-
+            
             IEnumerable<Product> data = _db.Product.GetAll(includeProperties: "Category,CoverType");
             return View(data);
         }
@@ -81,19 +81,21 @@ namespace BulkyBookWeb.Controllers
                 return RedirectToAction("Index");
 
             }
-
             return View(product);
         }
         public async Task<IActionResult> Edit(int id)
         {
-
-            var data = await _db.Category.GetByIdAsync(id);
+            if (id == null)
+            {
+                return NotFound();
+            }
+            var data = await _db.Product.GetByIdAsync(id);
             if(data == null)
             {
                 return View(NotFound());
             }
-            ViewData["CategoryId"] = new SelectList(await _db.Category.GetAllAsync(), "Id", "Name", Product.CategoryId);
-            ViewData["CoverTypeId"] = new SelectList(await _db.CoverType.GetAllAsync(), "Id", "Name", Product.CoverTypeId);
+            ViewData["CategoryId"] = new SelectList(await _db.Category.GetAllAsync(), "Id", "Name", data.CategoryId);
+            ViewData["CoverTypeId"] = new SelectList(await _db.CoverType.GetAllAsync(), "Id", "Name", data.CoverTypeId);
             return View(data);
         }
         [HttpPost]

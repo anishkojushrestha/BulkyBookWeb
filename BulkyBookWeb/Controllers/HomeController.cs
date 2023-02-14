@@ -23,6 +23,18 @@ namespace BulkyBookWeb.Controllers
             return View(data);
         }
 
+        public IActionResult Details(int id)
+        {
+            ShoppingCard cardObj = new()
+            {
+                Count = 1,
+                Product = _db.Product.GetFirstOrDefault(u => u.Id == id, includeProperties: "Category,CoverType")
+            };
+            return View(cardObj);
+        }
+       
+       
+
         public IActionResult Privacy()
         {
             return View();
