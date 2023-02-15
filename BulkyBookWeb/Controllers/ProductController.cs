@@ -78,6 +78,7 @@ namespace BulkyBookWeb.Controllers
 
                 }
                 await _db.Product.AddAsync(product);
+                TempData["Success"] = "Category Added successfuly";
                 return RedirectToAction("Index");
 
             }
@@ -118,12 +119,26 @@ namespace BulkyBookWeb.Controllers
                     product.Image = @"\img\" + fileName + extension;
 
                 }
+
                 await _db.Product.UpdateAsync(id, product);
+                TempData["Success"] = "Category Updated successfuly";
                 return RedirectToAction("Index");
 
             }
 
             return View(product);
+        }
+        public async Task<IActionResult> Delete(int id)
+        {
+            var data = await _db.Product.GetByIdAsync(id);
+            if (data != null)
+            {
+                await _db.Product.DeleteAsync(id);
+
+                TempData["Success"] = "Category Deleted successfuly";
+                return RedirectToAction("Index");
+            }
+            return View(data);
         }
         //#region API CALL
         //[HttpGet]
@@ -134,4 +149,4 @@ namespace BulkyBookWeb.Controllers
         //}
         //#endregion
     }
-}
+    }

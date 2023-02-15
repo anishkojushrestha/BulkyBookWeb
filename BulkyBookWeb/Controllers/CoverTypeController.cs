@@ -61,14 +61,15 @@ namespace BulkyBookWeb.Controllers
         }
         public async Task<IActionResult> Delete(int id)
         {
-            var data = _db.CoverType.GetByIdAsync(id);
-            if(data == null)
+            var data = await _db.CoverType.GetByIdAsync(id);
+            if (data != null)
             {
-                return View(data);
+                await _db.CoverType.DeleteAsync(id);
+
+                TempData["Success"] = "Category Deleted successfuly";
+                return RedirectToAction("Index");
             }
-            await _db.CoverType.DeleteAsync(id);
-            TempData["Success"] = "Category Deleted successfuly";
-            return RedirectToAction(nameof(Index));
+            return View(data);
         }
     }
 

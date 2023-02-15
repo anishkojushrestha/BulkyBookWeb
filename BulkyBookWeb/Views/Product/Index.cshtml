@@ -27,8 +27,11 @@
       <a asp-action="Create" asp-controller="Product">Create New Category</a>
         @foreach (var obj in Model)
         {
-                        <tr>
-                  <th>@obj.Image</th>
+            
+                  <tr>
+                  <td>
+                  <img src="@obj.Image" width="150%" class="rounded" />
+                  </td>        
                   <th>@obj.Title</th>
                   <th>@obj.Description</th>
                   <th>@obj.ISBN</th>
@@ -51,4 +54,4 @@
 @*
 @section Scripts{
     <script src="~/js/product.js"></script>
-*@}
+*@
