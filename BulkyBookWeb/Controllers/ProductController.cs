@@ -97,6 +97,8 @@ namespace BulkyBookWeb.Controllers
             }
             ViewData["CategoryId"] = new SelectList(await _db.Category.GetAllAsync(), "Id", "Name", data.CategoryId);
             ViewData["CoverTypeId"] = new SelectList(await _db.CoverType.GetAllAsync(), "Id", "Name", data.CoverTypeId);
+            
+            
             return View(data);
         }
         [HttpPost]
